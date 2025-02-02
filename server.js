@@ -11,39 +11,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-app.post('/', async (req, res) => {
-    setTimeout(() => {
-        const payment = req.body.payment
-        try {
-            if(payment.method == 'CREDIT_CARD')
-            {
-                if(payment.credit_card.number === parseInt(CN_AUTHORISED))
-                {
-                    res.status(200).send({
-                        orderStatus: "AUTHORISED"
-                    })
-                }
-                if(payment.credit_card.number === parseInt(CN_DECLINED))
-                {
-                    res.status(400).send({
-                        orderStatus: "DECLINED"
-                    })
-                }
-            }
-            if(payment.method == 'BILLET' || payment.method == 'PIX')
-            {
-                res.status(200).send({
-                    orderStatus: "PENDING"
-                })
-            }
-        } catch (error) {
-            console.log(error)
-            res.status(500).send({
-                message:'Unexpected Error'
-            })
-        }
-    }, 2000)
-})
+const apiRouter = require('./src/api.js')
+
+app.use('/api', apiRouter)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
