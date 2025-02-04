@@ -11,21 +11,32 @@ class PaymentController {
         }
     }
 
-    pix(req, res)
+    async pix(req, res)
     {
         try {
-            const p = PaymentServices.processPixPayment(req.body.payment)
+            const p = await PaymentServices.processPixPayment(req.body.payment)
+
             res.status(p.status).send(p.content)
         } catch (error) {
             res.status(500).send({message: error.message})
         }
     }
 
-    billet(req, res)
+    async billet(req, res)
     {
         try {
-            const p = PaymentServices.processBilletPayment(req.body.payment)
+            const p = await PaymentServices.processBilletPayment(req.body.payment)
             res.status(p.status).send(p.content)
+        } catch (error) {
+            res.status(500).send({message: error.message})
+        }
+    }
+
+    async pay(req, res)
+    {
+        try {
+            const p = await PaymentServices.pay(req.params.id)
+            res.status(p.status).json(p.content)
         } catch (error) {
             res.status(500).send({message: error.message})
         }
